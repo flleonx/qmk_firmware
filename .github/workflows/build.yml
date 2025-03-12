@@ -1,0 +1,40 @@
+name: Build QMK firmware
+on: [push, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+
+    steps:
+    - name: Checkout Userspace
+      uses: actions/checkout@v4
+      with:
+        token: ${{ github.token }}
+
+    - name: Install QMK CLI
+      run: |
+        python3 -m pip install --upgrade qmk
+        python3 -m pip install -r requirements.txt
+        sudo util/qmk_install.sh
+
+    - name: Configure QMK CLI
+      run: |
+        qmk config user.qmk_home=$GITHUB_WORKSPACE
+
+    - name: Install submodules
+      run : make git-submodules
+
+    - name: Build firmware
+      run: qmk compile -kb crkbd/rev4_1/standard -km manna-harbour_miryoku
+
+    - name: Archive firmware
+      uses: actions/upload-artifact@v4
+      continue-on-error: true
+      with:
+        name: ${{ github.actor }}
+        path: |
+          *.hex
+          *.bin
+          *.uf2
