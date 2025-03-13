@@ -12,6 +12,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         token: ${{ github.token }}
+        submodules: recursive
 
     - name: Install QMK CLI
       run: |
@@ -22,9 +23,6 @@ jobs:
     - name: Configure QMK CLI
       run: |
         qmk config user.qmk_home=$GITHUB_WORKSPACE
-
-    - name: Install submodules
-      run : make git-submodules
 
     - name: Build firmware
       run: qmk compile -kb crkbd/rev4_1/standard -km manna-harbour_miryoku
