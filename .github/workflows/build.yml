@@ -25,7 +25,7 @@ jobs:
         qmk config user.qmk_home=$GITHUB_WORKSPACE
 
     - name: Build firmware
-      run: qmk compile -kb crkbd/rev4_1/standard -km manna-harbour_miryoku
+      run: qmk compile -kb crkbd/rev4_1/standard -km flleonx
 
     - name: Archive firmware
       uses: actions/upload-artifact@v4
